@@ -1,7 +1,7 @@
 .PHONY: start stop restart run install
 
 start:
-	docker-compose up --detach node elasticsearch kibana
+	docker-compose up --detach node elasticsearch kibana server
 
 stop:
 	docker-compose down --remove-orphans --volumes --timeout 0
