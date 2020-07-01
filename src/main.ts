@@ -64,16 +64,6 @@ const searchTweets = (parameters: Readonly<Record<string, string | number | bool
     console.log("Searching for tweets to ingest...");
     const searchedTweets: Tweet[] = await searchTweets(parameters);
 
-    /*
-    const searchedTweets: Tweet[] = [{
-        created_at: "2020-01-02",
-        full_text: "2020-01-02",
-        retweet_count: 123,
-        favorite_count: 123,
-        lang: "2020-01-02"
-    }];
-    */
-
     console.log("Create a new connection to the Elasticsearch server...");
     const client = new elasticsearch.Client( {
         hosts: [
