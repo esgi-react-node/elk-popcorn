@@ -9,6 +9,7 @@ services:
         stdin_open: true
         ports:
             - 8080:8080
+            - 8081:8081
         env_file:
             - .env
         volumes:
@@ -22,6 +23,8 @@ services:
         ports:
             - 9200:9200
             - 9300:9300
+        volumes:
+            - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
     kibana:
         restart: always
@@ -30,11 +33,3 @@ services:
         image: docker.elastic.co/kibana/kibana:7.7.0
         ports:
             - 5601:5601
-
-    server:
-        image: nginx:latest
-        ports:
-            - 80:80
-        volumes:
-            - ./src:/usr/share/nginx/html
-            - ./nginx.conf:/etc/nginx/nginx.conf
