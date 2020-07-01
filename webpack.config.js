@@ -4,11 +4,11 @@ const {resolve} = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    mode: "development",
+    mode: process.env.NODE_ENV || "development",
     entry: resolve("src", "index.js"),
 
     output: {
-        path: resolve("dist"),
+        path: resolve("public"),
         filename: "index.js"
     },
 
@@ -26,7 +26,7 @@ module.exports = {
         port: 8080,
         sockHost: "0.0.0.0",
         sockPort: 8080,
-        contentBase: resolve("dist")
+        contentBase: resolve("public")
     },
 
     plugins: [
