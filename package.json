@@ -3,7 +3,7 @@
     "scripts": {
         "server": "ts-node server/main.ts",
         "client": "webpack-dev-server",
-        "build": "webpack"
+        "build": "NODE_ENV=production webpack"
     },
     "devDependencies": {
         "@babel/core": "^7.10.4",
