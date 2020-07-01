@@ -1,7 +1,7 @@
 .PHONY: start stop restart ingest install build server
 
 start:
-	docker-compose up --detach node elasticsearch kibana
+	docker-compose up --detach node elasticsearch kibana nginx
 
 stop:
 	docker-compose down --remove-orphans --volumes --timeout 0
