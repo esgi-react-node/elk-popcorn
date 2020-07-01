@@ -1,4 +1,7 @@
+// Twitter client API for Node.js
 import Twitter from "twitter";
+
+// Elasticsearch client API for Node.js
 import {Client} from "elasticsearch";
 
 export interface Tweet {
@@ -9,7 +12,7 @@ export interface Tweet {
     lang: string;
 }
 
-
+// Creating the Twitter client
 const twitter = new Twitter({
     consumer_key: process.env.TWITTER_KEY || "",
     consumer_secret: process.env.TWITTER_KEY_SECRET || "",
@@ -17,6 +20,7 @@ const twitter = new Twitter({
     access_token_secret: process.env.TWITTER_TOKEN_SECRET || ""
 });
 
+// Parameters for the tweets search request 
 const parameters: Readonly<Record<string, string | number | boolean>> = Object.freeze({
     q: encodeURIComponent("#Popcorn"),
     lang: "fr",
@@ -27,6 +31,8 @@ const parameters: Readonly<Record<string, string | number | boolean>> = Object.f
     tweet_mode: "extended"
 });
 
+// Helper for recursively searching through all available tweets with the hashtag
+// #popcorn for the past seven days
 const searchTweets = (parameters: Readonly<Record<string, string | number | boolean>>): Promise<Tweet[]> => {
     return new Promise((resolve, reject) => {
         twitter.get("search/tweets", parameters, async (error, response) => {
