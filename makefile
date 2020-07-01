@@ -1,4 +1,4 @@
-.PHONY: start stop restart run
+.PHONY: start stop restart run install
 
 start:
 	docker-compose up --detach node elasticsearch kibana
@@ -10,3 +10,6 @@ restart: stop start
 
 run:
 	docker-compose exec node yarn ts-node src/main.ts
+
+install:
+	docker-compose exec node yarn install
