@@ -24,6 +24,18 @@ interface Tweet {
 
 interface SearchedTweets {
     statuses: Tweet[];
+
+    search_metadata: {
+        completed_in: number,
+        max_id: number,
+        max_id_str: string,
+        next_results: string,
+        query: string,
+        refresh_url: string,
+        count: number,
+        since_id: number,
+        since_id_str: string
+    }
 }
 
 const onTweetSearch = (error: Error, tweets: SearchedTweets): void => {
@@ -32,7 +44,28 @@ const onTweetSearch = (error: Error, tweets: SearchedTweets): void => {
         return;
     }
 
-    console.log(tweets.statuses.map(({full_text}: Tweet) => full_text));
+    console.log(tweets);
+
+    const urlSearchParams = new URLSearchParams(tweets.search_metadata.next_results);
+    const urlSearchParamsEntries: Record<string, string> = Object.fromEntries(urlSearchParams.entries());
+    const query = urlSearchParamsEntries.q.split(" ")[0];
+
+    console.log(urlSearchParamsEntries);
+
+    console.log("OK !!!!!!!!!!!!!!!!! JE PASSE A LA SUITE");
+
+
+    /*
+    twitter.get("search/tweets", searchTweetsParams, (error: Error, tweets): void => {
+        if (error) {
+            console.log("Unable to fetch all tweets from the #popcorn hashtag.");
+            return;
+        }
+
+        console.log(tweets);
+
+    });
+    */
 };
 
 // @ts-ignore
