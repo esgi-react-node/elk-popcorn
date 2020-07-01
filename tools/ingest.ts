@@ -1,5 +1,5 @@
 import Twitter from "twitter";
-import elasticsearch from "elasticsearch";
+import {Client} from "elasticsearch";
 
 export interface Tweet {
     created_at: string;
@@ -65,9 +65,9 @@ const searchTweets = (parameters: Readonly<Record<string, string | number | bool
     const searchedTweets: Tweet[] = await searchTweets(parameters);
 
     console.log("Create a new connection to the Elasticsearch server...");
-    const client = new elasticsearch.Client( {
+    const client = new Client({
         hosts: [
-            'http://elasticsearch:9200/',
+            "http://elasticsearch:9200"
         ]
     });
 
@@ -82,22 +82,77 @@ const searchTweets = (parameters: Readonly<Record<string, string | number | bool
 
         console.log("Creating the index for Tweet...");
         await client.indices.create({
-            index: 'tweets',
+            index: "tweets",
             body: {
+                "settings": {
+                    "analysis": {
+                        "filter": {
+                            "french_elision": {
+                                "type":         "elision",
+                                "articles_case": true,
+                                "articles": [
+                                    "l", "m", "t", "qu", "n", "s",
+                                    "j", "d", "c", "jusqu", "quoiqu",
+                                    "lorsqu", "puisqu"
+                                ]
+                            },
+                            "french_stop": {
+                                "type":       "stop",
+                                "stopwords":  "_french_" 
+                            },
+                            "french_keywords": {
+                                "type":       "keyword_marker",
+                                "keywords":   ["Example"] 
+                            },
+                            "french_stemmer": {
+                                "type":       "stemmer",
+                                "language":   "light_french"
+                            }
+                        },
+                        "analyzer": {
+                            "rebuilt_french": {
+                                "tokenizer":  "standard",
+                                "filter": [
+                                    "french_elision",
+                                    "lowercase",
+                                    "french_stop",
+                                    "french_keywords",
+                                    "french_stemmer"
+                                ]
+                            }
+                        }
+                    }
+                },
                 mappings: {
                     properties: {
-                        created_at: { type: 'text' },
-                        full_text: { type: 'text' },
-                        retweet_count: { type: 'integer' },
-                        favorite_count: { type: 'integer' },
-                        lang: { type: 'text' }
+                        created_at: {
+                            type: "text",
+                            analyzer: "stop",
+                            search_analyzer: "stop"
+                        },
+                        full_text: {
+                            type: "text",
+                            analyzer: "french",
+                            search_analyzer: "french"
+                        },
+                        retweet_count: {
+                            type: "integer"
+                        },
+                        favorite_count: {
+                            type: "integer"
+                        },
+                        lang: {
+                            type: "text",
+                            analyzer: "stop",
+                            search_analyzer: "stop"
+                        }
                     }
                 }
             }
         });
 
         console.log("Formatting the tweets...");
-        const body = data.flatMap(doc => [{ index: { _index: 'tweets' } }, doc])
+        const body = data.flatMap(doc => [{ index: { _index: "tweets" } }, doc])
 
         console.log("Ingesting the data...");
         await client.bulk({
@@ -105,7 +160,7 @@ const searchTweets = (parameters: Readonly<Record<string, string | number | bool
             body
         });
 
-        const {count} = await client.count({index: 'tweets'})
+        const {count} = await client.count({index: "tweets"})
         console.log(`Documents added: ${count}`);
     };
 
