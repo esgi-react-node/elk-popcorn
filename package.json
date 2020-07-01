@@ -10,5 +10,9 @@
         "ts-node": "^8.10.2",
         "twitter": "^1.7.1",
         "typescript": "^3.9.5"
+    },
+    "dependencies": {
+        "@types/elasticsearch": "^5.0.36",
+        "elasticsearch": "^16.7.1"
     }
 }

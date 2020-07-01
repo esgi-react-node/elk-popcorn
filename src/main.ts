@@ -1,4 +1,5 @@
 import Twitter from "twitter";
+import { Tweet, bulk } from "./gulp";
 
 const twitter = new Twitter({
     consumer_key: "QX1uK8WIDChlv0BgYcEyMaufM",
@@ -17,10 +18,6 @@ const PARAMS = Object.freeze({
     until: "2020-06-23",
     tweet_mode: "extended"
 });
-
-interface Tweet {
-    full_text: string;
-}
 
 interface SearchedTweets {
     statuses: Tweet[];
