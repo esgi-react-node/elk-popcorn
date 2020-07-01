@@ -1,13 +1,15 @@
 import Twitter from "twitter";
-import { Tweet, bulk } from "./gulp";
 
 const twitter = new Twitter({
-    consumer_key: process.env.TWITTER_API_KEY || "",
-    consumer_secret: process.env.TWITTER_API_SECRET_KEY || "",
-    access_token_key: process.env.TWITTER_ACCESS_TOKEN || "",
-    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET || ""
+    consumer_key: process.env.TWITTER_KEY || "",
+    consumer_secret: process.env.TWITTER_KEY_SECRET || "",
+    access_token_key: process.env.TWITTER_TOKEN || "",
+    access_token_secret: process.env.TWITTER_TOKEN_SECRET || ""
 });
 
+interface Tweet {
+    full_text: string;
+}
 
 interface SearchedTweets {
     statuses: Tweet[];
@@ -70,20 +72,31 @@ const onTweetSearch = (error: any, tweets: any) => {
 
 const searchTweets = (parameters: Readonly<Record<string, string | number | boolean>>): Promise<string[]> => {
     return new Promise((resolve, reject) => {
-        twitter.get("search/tweets", parameters, async (error, tweets) => {
+        twitter.get("search/tweets", parameters, async (error, response) => {
             if (error) {
+                console.error(error);
                 resolve([]);
                 return;
             }
 
-            if (tweets.statuses.length === 0) {
+            if (response.statuses.length === 0) {
+                console.log("Empty search.");
                 resolve([]);
                 return;
             }
-            
-            const texts = tweets.statuses.map(({full_text}: {full_text: string}) => full_text);
 
-            resolve(texts);
+            const tweets: string[] = response.statuses.map(({full_text}: {full_text: string}): string => full_text);
+            const max_id: string | null = new URLSearchParams(response.search_metadata.next_results).get("max_id");
+
+            if (max_id === null) {
+                console.log("No more tweets available");
+                resolve([]);
+                return;
+            }
+
+            console.log("Searching for the next tweets...");
+            const nextTweets = await searchTweets({...parameters, max_id});
+            resolve([...tweets, ...nextTweets]);
         });
     });
 };
