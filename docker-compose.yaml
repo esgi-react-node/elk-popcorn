@@ -1,44 +1,70 @@
+# Version of the Docker Compose API to use
 version: "3"
 
+# Services available
 services:
+    # Name of the service
     node:
-        image: node
+        # Image to use for this service
+        image: node:14.0.0
+        # User to issue command with for this service
         user: node
+        # Directory in which to issue commands from
         working_dir: /home/node
+        # Prevents closing this container when no background processes are running
         tty: true
+        # Allow sending inputs from a TTY to the container
         stdin_open: true
+        # Ports open for this service
         ports:
             - 8080:8080
             - 8081:8081
+        # Files to load from for exposing environment variables
         env_file:
             - .env
+        # Local filesystem's endpoint to mount into the container
         volumes:
             - .:/home/node
         
+    # Name of the service
     elasticsearch:
+        # Restart the service in case of a fatal error
         restart: always
+        # Image to use for this service
         image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+        # Environment variable to set for this service
         environment:
             - "discovery.type=single-node"
+        # Ports open for this service
         ports:
             - 9200:9200
             - 9300:9300
+        # Local filesystem's endpoint to mount into the container
         volumes:
             - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
+    # Name of the service
     kibana:
+        # Restart the service in case of a fatal error
         restart: always
         depends_on:
             - elasticsearch
+        # Image to use for this service
         image: docker.elastic.co/kibana/kibana:7.7.0
+        # Ports open for this service
         ports:
             - 5601:5601
 
+    # Name of the service
     nginx:
+        # Restart the service in case of a fatal error
         restart: always
+        # Image to use for this service
         image: nginx:1.19.0
+        # Ports open for this service
         ports:
             - 80:80
+        # Local filesystem's endpoint to mount into the container
         volumes:
             - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
             - ./public:/usr/share/nginx/html
