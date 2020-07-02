@@ -29,10 +29,19 @@ Command | Description
 `make start` | Start the Docker Compose services.
 `make install` | Install the development dependencies.
 `make ingest` | Ingest data from Twitter.
-`make client` | Start the client application available at http://localhost:8080.
-`make server` | Start the server application available at http://localhost:8081.
+`make client` | Start the client application.
+`make server` | Start the server application.
 `make stop` | Start the Docker Compose services.
 `make restart` | Start the Docker Compose services.
+
+## Endpoints
+
+Endpoint | Requires | Description
+---|---|---
+localhost:8080 | make client | Client (development)
+localhost | make build | Client (production)
+localhost:8081 | make server | Server
+localhost:5601 | make start | Kibana client
 
 ## Environment
 
