@@ -1,4 +1,4 @@
-.PHONY: start stop restart ingest install build server
+.PHONY: start stop restart ingest install build server mrproper
 
 start:
 	docker-compose up --detach node elasticsearch kibana nginx
@@ -22,3 +22,6 @@ build:
 	
 server:
 	docker-compose exec node yarn ts-node server/main.ts
+
+mrproper:
+	docker-compose exec node sh -c 'for file in $(shell cat .gitignore); do rm -rf ./$$file; done'
