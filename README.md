@@ -12,7 +12,15 @@
 ```console
 $ git clone git@github.com:esgi-react-node/elk-popcorn.git
 $ cd elk-popcorn
+$ cp .env.example .env
+$ vim .env
 ```
+
+```
+TWITTER_KEY=DJ6....................
+TWITTER_KEY_SECRET=LtK.............
+TWITTER_TOKEN=569..................
+TWITTER_TOKEN_SECRET=13J...........
 
 ## Commands
 
@@ -25,21 +33,3 @@ Command | Description
 `make server` | Start the server application available at http://localhost:8081.
 `make stop` | Start the Docker Compose services.
 `make restart` | Start the Docker Compose services.
-
-## Ingesting data
-
-Before you can even run the `make ingest` command, you'll need to setup your environment.
-
-```console
-$ cp .env.example .env
-$ vim .env
-```
-
-```
-TWITTER_KEY=DJ6....................
-TWITTER_KEY_SECRET=LtK.............
-TWITTER_TOKEN=569..................
-TWITTER_TOKEN_SECRET=13J...........
-```
-
-This will allow fetching tweets with the Twitter API.
