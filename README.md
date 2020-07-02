@@ -33,3 +33,12 @@ Command | Description
 `make server` | Start the server application available at http://localhost:8081.
 `make stop` | Start the Docker Compose services.
 `make restart` | Start the Docker Compose services.
+
+## Environment
+
+If you intend to update the `.env` file, make sure to restart the services to take the environment into account.
+
+```console
+$ vim .env
+$ make restart
+```
